@@ -5,12 +5,24 @@ var xMenu = 440;
 var yMenu = 140;
 var largura = 400;
 var altura = 100;
-var playS = 0; 
+var playS = 0;
 
 var rato; bg; borda_1; borda_gold; botaostartl1; botaostartl2; instrucao_l; instrucao_lg; creditos_l; creditos_lg; instrucao_bg; //Menu Image
-var  orientador; programador; artista; //Credits
+var orientador; programador; artista; //Credits
+var win_screen;
 
-var popup; popout; //Sound
+var popup; popout, correct_sound; //Sounds
+
+/* a1 = mouseX > xMenu  && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 220
+a2 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 300
+a3 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 380
+a4 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 460 */
+
+//Questions & Answers variables
+var question = [];
+var answer = [];
+var fanswer = [];
+
 //Cursor Image
 
 function preload() {
@@ -26,6 +38,8 @@ function preload() {
   creditos_l = loadImage('assets/creditos_l.png');
   creditos_lg = loadImage('assets/creditos_lg.png');
   instrucao_bg = loadImage('assets/instrucoes_bg.webp');
+  ingame_bg = loadImage('assets/letter.png');
+  win_screen = loadImage('assets/won.png');
  
   //Créditos [Tela = 3]
   orientador = loadImage('assets/Orientador.jpg');
@@ -34,6 +48,7 @@ function preload() {
   //Sound Effect
   popup = loadSound('assets/sounds/mouse_over.wav');
   popout = loadSound('assets/sounds/unlock.wav');
+  correct_sound = loadSound('assets/sounds/correct.wav');
 
 }
 
@@ -42,9 +57,37 @@ function setup() {
   cursor('assets/minirato2.png');  
 }
 
-function draw() {
+function backButton() {
+  //Back buttom
+  textAlign(LEFT);
+  fill(224, 211, 189);
+  stroke(230, 222, 205);
+  rect(1100, 650, 150, 50, 20);
+  fill(0);
+  textSize(40);
+  textStyle(BOLDITALIC);
+  text("Voltar", 1120, 690);
 
-  // Menu
+  if (mouseX > 1100  && mouseX < 1100 + 150 && mouseY > 650 && mouseY < 650 + 50) {
+    console.log("Passou em cima");
+    textStyle(BOLDITALIC);
+    text("Voltar", 1125, 690);    
+  }
+}
+
+function draw() {
+  //Questions & Answers
+  question = ["1- Quem descobriu o Brasil?", "2- Qual o nome do presidente do Brasil que ficou conhecido como Jango?",
+  "3- Que nome recebeu a lei que foi assinada pela princesa Isabel e que proibiu a escravidão no Brasil?",
+  "4- No período pré-colonial a atividade econômica que teve maior destaque foi", "5- Em 1534, a Coroa portuguesa dividiu o território em 15 partes que ficaram conhecidos como"];
+  answer = ["Pedro A. Cabral", "João Goulart", "Lei Áurea", "Pau-Brasil", "Capitanias Hereditárias"];
+  fanswer = ["Bolsonaro", "Silvio Santos", "Pero Vaz de Caminha",
+  "Getúlio Vargas", "João Figueiredo", "Jacinto Anjos",
+  "Lei do Ventre Livre", "Lei Bill Aberdeen", "Lei dos Sexagenários",
+  "Mineração", "Cana de Açúcar", "Café",
+  "Tratado de Tordesilhas", "Tratado de Donatários", "Governos Gerais"];
+
+  //Menu
   if (screen == 0) {
     background(bg);
 
@@ -108,50 +151,58 @@ function draw() {
       }
     }
   }
-  
-  if (screen == 1) {
-    background(0);
-    textSize(60);
-    textStyle(BOLDITALIC);
-    fill(255,215,0);
-    text("Em construção!", 420,100);
+  //Game
+ if (screen == 1) {
+    //mouseX > xMenu  && mouseX < xMenu + largura && mouseY > yMenu && mouseY < yMenu + altura
+
+    
+    background(instrucao_bg);
+    background(ingame_bg);
+
+    //Questions
 
     textSize(40);
-    textStyle(NORMAL);
-    fill(230);
-    text("Quem descobriu o Brasil?", 420, 200);
+    textStyle(ITALIC);
+    fill(0); //230
+    text(question[0], 380, 100, 550, 200); //coordinates x = 420, y = 200
 
-    //Awnsers
-    fill(255);
+    //Awnsers box
+    fill(230, 230, 230, 20);
+    stroke(0);
+    rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+
+    fill(255, 255, 255, 255);
     //stroke(230, 222, 205);
-    rect(180, 450, 240, 50, 20);
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("hovered over b1"); 
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("hovered over b2");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("hovered over b3");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("hovered over b4");
+    }
     fill(0);
-    textSize(40);
+    textSize(38);
+    textAlign(CENTER);
     textStyle(BOLDITALIC);
-    text("Bolsonaro", 200, 490); //200, 490
+    text(fanswer[1], xMenu - 20, 380, xMenu);
+    text(answer[0], xMenu - 20, 460, xMenu); //200, 490
+    text(fanswer[0], xMenu - 20, 540, xMenu);
+    text(fanswer[2], xMenu - 20, 620, xMenu);
 
-    fill(255);
-    rect(750, 450, 240, 50, 20);
-    fill(0);
-    textSize(30);
-    textStyle(BOLDITALIC);
-    text("Pedro A. Cabral", 760, 490); //200, 490
-
-    fill(255);
-    rect(180, 550, 240, 50, 20);
-    fill(0);
-    textSize(40);
-    textStyle(BOLDITALIC);
-    text("Jon Snow", 200, 590); //200, 490
-
-    fill(255);
-    rect(750, 550, 240, 50, 20);
-    fill(0);
-    textSize(30);
-    textStyle(BOLDITALIC);
-    text("Silvio Santos", 780, 590); //200, 490
   }
-
+  //Instructions
   if (screen == 2) {
     background(50, 150);
     image(instrucao_bg, 0, 0, 1280, 720)
@@ -163,25 +214,11 @@ function draw() {
     textSize(40);
     textStyle(ITALIC);
     fill(0);
-    text("Para jogar, use o mouse para\nSelecionar a resposta correta.\nSe errar, o jogo acaba :)", 350,200);
+    text("Para jogar, use o mouse para\nselecionar a resposta correta.\nse errar, o jogo acaba", 350,200);
 
-    //Back buttom
-    fill(224, 211, 189);
-    stroke(230, 222, 205);
-    rect(1100, 650, 150, 50, 20);
-    fill(0);
-    textSize(40);
-    textStyle(BOLDITALIC);
-    text("Voltar", 1120, 690);
-
-    if (mouseX > 1100  && mouseX < 1100 + 150 && mouseY > 650 && mouseY < 650 + 50) {
-      console.log("Passou em cima");
-      textStyle(BOLDITALIC);
-      text("Voltar", 1125, 690);
-
-    }
+    backButton()
   }
-
+  //Credits
   if (screen == 3) {
     background(220);
     fill(0);
@@ -217,23 +254,210 @@ function draw() {
     }
     //image(artista, 50, 360, 720/4, 1280/4)
 
-    //Back buttom
-    fill(224, 211, 189);
-    stroke(230, 222, 205);
-    rect(1100, 650, 150, 50, 20);
-    fill(0);
+    backButton()
+  }
+  //In_Game Screen
+  if (screen == 4) {
+
+    background(instrucao_bg);
+    background(ingame_bg);
+
+    //Questions
+
     textSize(40);
-    textStyle(BOLDITALIC);
-    text("Voltar", 1120, 690);
-    
-    if (mouseX > 1100  && mouseX < 1100 + 150 && mouseY > 650 && mouseY < 650 + 50) {
-      console.log("Passou em cima");
-      textStyle(BOLDITALIC);
-      text("Voltar", 1125, 690);
+    textStyle(ITALIC);
+    fill(0); //230
+    text(question[1], 380, 100, 550, 200); //coordinates x = 420, y = 200
+
+    //Awnsers box
+    fill(230, 230, 230, 20);
+    rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+
+    fill(255, 255, 255, 255);
+    //stroke(230, 222, 205);
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("hovered over b1"); 
     }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("hovered over b2");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("hovered over b3");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("hovered over b4");
+    }
+    fill(0);
+    textSize(38);
+    textAlign(CENTER);
+    textStyle(BOLDITALIC);
+    text(fanswer[3], xMenu - 20, 380, xMenu);
+    text(fanswer[5], xMenu - 20, 460, xMenu); //200, 490
+    text(answer[1], xMenu - 20, 540, xMenu);
+    text(fanswer[4], xMenu - 20, 620, xMenu);
+  }
+  if (screen == 5) {
+
+    background(instrucao_bg);
+    background(ingame_bg);
+
+    //Questions
+
+    textSize(40);
+    textStyle(ITALIC);
+    fill(0); //230
+    text(question[2], 380, 100, 550, 200); //coordinates x = 420, y = 200
+
+    //Awnsers box
+    fill(230, 230, 230, 20);
+    rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+
+    fill(255, 255, 255, 255);
+    //stroke(230, 222, 205);
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("hovered over b1"); 
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("hovered over b2");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("hovered over b3");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("hovered over b4");
+    }
+    fill(0);
+    textSize(38);
+    textAlign(CENTER);
+    textStyle(BOLDITALIC);
+    text(answer[2], xMenu - 20, 380, xMenu);
+    text(fanswer[7], xMenu - 20, 460, xMenu); //200, 490
+    text(fanswer[8], xMenu - 20, 540, xMenu);
+    text(fanswer[6], xMenu - 20, 620, xMenu);
+
+  }
+  if (screen == 6) {
+    
+    background(instrucao_bg);
+    background(ingame_bg);
+
+    //Questions
+
+    textSize(40);
+    textStyle(ITALIC);
+    fill(0); //230
+    text(question[3], 380, 100, 550, 200); //coordinates x = 420, y = 200
+
+    //Awnsers box
+    fill(230, 230, 230, 20);
+    rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+
+    fill(255, 255, 255, 255);
+    //stroke(230, 222, 205);
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("hovered over b1"); 
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("hovered over b2");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("hovered over b3");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("hovered over b4");
+    }
+    fill(0);
+    textSize(38);
+    textAlign(CENTER);
+    textStyle(BOLDITALIC);
+    text(fanswer[10], xMenu - 20, 380, xMenu);
+    text(fanswer[11], xMenu - 20, 460, xMenu); //200, 490
+    text(fanswer[9], xMenu - 20, 540, xMenu);
+    text(answer[3], xMenu - 20, 620, xMenu);
+  }
+  if (screen == 7) {
+    background(instrucao_bg);
+    background(ingame_bg);
+
+    //Questions
+
+    textSize(40);
+    textStyle(ITALIC);
+    fill(0); //230
+    text(question[4], 380, 100, 550, 200); //coordinates x = 420, y = 200
+
+    //Awnsers box
+    fill(230, 230, 230, 20);
+    rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+    rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+
+    fill(255, 255, 255, 255);
+    //stroke(230, 222, 205);
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("hovered over b1"); 
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("hovered over b2");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("hovered over b3");
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("hovered over b4");
+    }
+    fill(0);
+    textSize(35);
+    textAlign(CENTER);
+    textStyle(BOLDITALIC);
+    text(fanswer[14], xMenu - 20, 380, xMenu);
+    text(answer[4], xMenu - 20, 460, xMenu); //200, 490
+    text(fanswer[12], xMenu - 20, 540, xMenu);
+    text(fanswer[13], xMenu - 20, 620, xMenu);
+  }
+  //Won Game Screen
+  if (screen == 9) {
+    image(win_screen, 0, 0, 1280, 720);
+    
+  }
+  //Game Over
+  if (screen == 10) {
+    background(0)
+    textSize(60);
+    textAlign(CENTER);
+    fill(255);
+    text("Fim de jogo!", 640, 200);
+    text("Mais sorte (ou estudo) da próxima vez", 640, 350);
   }
 }
 function mouseClicked() {
+  //Menu
   if (screen == 0) {
     if (mouseX > xMenu  && mouseX < xMenu + largura && mouseY > yMenu && mouseY < yMenu + altura) {
       popout.play();
@@ -252,21 +476,139 @@ function mouseClicked() {
       screen = 3;
     }
   }
-  if (screen == 1) {
+  //In-Game
+  else if (screen == 1) {
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("pressed b1");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("pressed b2");
+      correct_sound.play();
+      screen = 4
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("pressed b3");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("pressed b4");
+      screen = 10
+    }
 
   }
-  if (screen == 2) {
+  //Instructions
+  else if (screen == 2) {
     if (mouseX > 950  && mouseX < 1100 + 150 && mouseY > 650 && mouseY < 650 + 50) {
       popout.play();
       console.log("Pressionou");
       screen = 0
     }
   }
-  if (screen == 3) {
+  //Credits
+  else if (screen == 3) {
     if (mouseX > 950  && mouseX < 1100 + 150 && mouseY > 650 && mouseY < 650 + 50) {
       popout.play();
       console.log("Pressionou");
       screen = 0
+    }
+  }
+  //In-Game2
+  else if (screen == 4) {
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("pressed b1");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("pressed b2");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("pressed b3");
+      correct_sound.play();
+      screen = 5
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("pressed b4");
+      screen = 10
+    }
+  }
+  else if (screen == 5) {
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("pressed b1");
+      correct_sound.play();
+      screen = 6
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("pressed b2");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("pressed b3");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("pressed b4");
+      screen = 10
+    }
+  }
+  else if (screen == 6) {
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("pressed b1");
+      correct_sound.play();
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("pressed b2");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("pressed b3");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("pressed b4");
+      correct_sound.play();
+      screen = 7
+    }
+  }
+  else if (screen == 7) {
+    if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 190) {
+      rect(xMenu, yMenu + 220, largura, altura - 30, 20);
+      console.log("pressed b1");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 270) {
+      rect(xMenu, yMenu + 300, largura, altura - 30, 20);
+      console.log("pressed b2");
+      correct_sound.play();
+      screen = 9
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 350) {
+      rect(xMenu, yMenu + 380, largura, altura - 30, 20);
+      console.log("pressed b3");
+      screen = 10
+    }
+    else if (mouseX > xMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 430) {
+      rect(xMenu, yMenu + 460, largura, altura - 30, 20);
+      console.log("pressed b4");
+      screen = 10
     }
   }
 }
