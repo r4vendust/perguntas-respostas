@@ -13,17 +13,24 @@ var win_screen;
 
 var popup; popout, correct_sound; //Sounds
 
-/* a1 = mouseX > xMenu  && mouseX < xMenu + largura && mouseY > yMenu + 220 && mouseY < yMenu + altura + 220
-a2 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 300 && mouseY < yMenu + altura + 300
-a3 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 380 && mouseY < yMenu + altura + 380
-a4 = mouseX > XMenu && mouseX < xMenu + largura && mouseY > yMenu + 460 && mouseY < yMenu + altura + 460 */
-
 //Questions & Answers variables
 var question = [];
 var answer = [];
 var fanswer = [];
 
 //Cursor Image
+
+var cnv;
+
+function centerCanvas() {
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height) / 2;
+  cnv.position(x, y);
+}
+
+function windowResized() {
+  centerCanvas();
+}
 
 function preload() {
   rato = loadImage('assets/minirato2.png'); //Mouse cursor
@@ -53,7 +60,9 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1280, 720);
+  cnv = createCanvas(1280, 720);
+  centerCanvas();
+  background(255, 0, 200);
   cursor('assets/minirato2.png');  
 }
 
@@ -153,8 +162,6 @@ function draw() {
   }
   //Game
  if (screen == 1) {
-    //mouseX > xMenu  && mouseX < xMenu + largura && mouseY > yMenu && mouseY < yMenu + altura
-
     
     background(instrucao_bg);
     background(ingame_bg);
